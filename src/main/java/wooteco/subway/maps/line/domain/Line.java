@@ -18,6 +18,8 @@ public class Line extends BaseEntity {
     private LocalTime startTime;
     private LocalTime endTime;
     private int intervalTime;
+
+    @Column(nullable = true)
     private int extraFare;
     @Embedded
     private LineStations lineStations = new LineStations();
