@@ -31,7 +31,8 @@ public class FareServiceTest {
                 .sectionFare(100)
                 .build();
         fareService = new FareService(
-                Arrays.asList(fareDistanceStrategy_5km, fareDistanceStrategy_8km)
+                Arrays.asList(fareDistanceStrategy_5km, fareDistanceStrategy_8km),
+                Collections.EMPTY_LIST
         );
     }
 

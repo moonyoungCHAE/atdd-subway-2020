@@ -6,17 +6,17 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class MemberFinder {
-    public static boolean isLogin() {
-        if (Objects.nonNull(SecurityContextHolder
+    public boolean isLogin() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            return false;
+        }
+        return Objects.nonNull(SecurityContextHolder
                 .getContext()
                 .getAuthentication()
-                .getPrincipal())) {
-            return true;
-        }
-        return false;
+                .getPrincipal());
     }
 
-    public static int findMemberAge() {
+    public int findMemberAge() {
         try {
             String age = (String) ((LinkedHashMap) SecurityContextHolder
                     .getContext()
