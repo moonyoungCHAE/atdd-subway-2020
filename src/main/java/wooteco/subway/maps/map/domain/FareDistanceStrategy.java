@@ -2,18 +2,20 @@ package wooteco.subway.maps.map.domain;
 
 import lombok.Builder;
 
+import java.util.Optional;
+
 public class FareDistanceStrategy {
     private static final int FREE = 0;
 
-    private int startDistance;
-    private int endDistance;
+    private int minDistance;
+    private Optional<Integer> maxDistance;
     private int section;
     private int sectionFare;
 
     @Builder
-    public FareDistanceStrategy(int startDistance, int endDistance, int section, int sectionFare) {
-        this.startDistance = startDistance;
-        this.endDistance = endDistance;
+    public FareDistanceStrategy(int minDistance, Integer maxDistance, int section, int sectionFare) {
+        this.minDistance = minDistance;
+        this.maxDistance = Optional.ofNullable(maxDistance);
         this.section = section;
         this.sectionFare = sectionFare;
     }
@@ -22,16 +24,24 @@ public class FareDistanceStrategy {
         if (isNotInArrange(distance)) {
             return FREE;
         }
+        distance = formatDistance(distance);
         int sectionCount = findSectionCount(distance);
         return sectionCount * sectionFare;
     }
 
     private boolean isNotInArrange(int distance) {
-        return distance <= startDistance || distance > endDistance;
+        return distance <= minDistance;
+    }
+
+    private int formatDistance(int distance) {
+        if (maxDistance.isPresent() && maxDistance.get() < distance) {
+            return maxDistance.get();
+        }
+        return distance;
     }
 
     private int findSectionCount(int distance) {
-        distance -= startDistance;
+        distance -= minDistance;
         int sectionCount = distance / section;
         if (hasRemainder(distance)) {
             return sectionCount + 1;
