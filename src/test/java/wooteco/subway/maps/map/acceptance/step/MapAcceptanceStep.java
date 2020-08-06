@@ -3,9 +3,9 @@ package wooteco.subway.maps.map.acceptance.step;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import wooteco.subway.maps.map.dto.MapResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import wooteco.subway.maps.map.dto.MapResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
