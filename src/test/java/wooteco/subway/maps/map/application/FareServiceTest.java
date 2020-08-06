@@ -5,7 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import wooteco.subway.maps.line.domain.Line;
 import wooteco.subway.maps.map.domain.FareDistanceStrategy;
+
+import java.time.LocalTime;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,6 +47,31 @@ public class FareServiceTest {
     @CsvSource({"51,2150", "58,2150", "59,2250"})
     void findFareTest_8km(int distance, int expected) {
         int actual = fareService.findFare(distance);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("추가 요금이 있는 노선의 요금을 계산한다.")
+    @Test
+    void findFareTest_line() {
+        Line line_2 = Line.builder()
+                .name("2호선")
+                .extraFare(100)
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now())
+                .intervalTime(10)
+                .color("Green")
+                .build();
+        Line line_bundang = Line.builder()
+                .name("분당선")
+                .extraFare(900)
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now())
+                .intervalTime(10)
+                .color("Gold")
+                .build();
+
+        int expected = Math.max(line_2.getExtraFare(), line_bundang.getExtraFare());
+        int actual = fareService.findFare(Arrays.asList(line_2, line_bundang));
         assertThat(actual).isEqualTo(expected);
     }
 }

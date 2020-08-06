@@ -1,5 +1,6 @@
 package wooteco.subway.maps.line.domain;
 
+import lombok.Builder;
 import wooteco.subway.common.domain.BaseEntity;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Line extends BaseEntity {
     private LocalTime startTime;
     private LocalTime endTime;
     private int intervalTime;
+    private int extraFare;
     @Embedded
     private LineStations lineStations = new LineStations();
 
@@ -29,6 +31,12 @@ public class Line extends BaseEntity {
         this.startTime = startTime;
         this.endTime = endTime;
         this.intervalTime = intervalTime;
+    }
+
+    @Builder
+    public Line(String name, String color, LocalTime startTime, LocalTime endTime, int intervalTime, int extraFare) {
+        this(name, color, startTime, endTime, intervalTime);
+        this.extraFare = extraFare;
     }
 
     public void update(Line line) {
@@ -73,6 +81,10 @@ public class Line extends BaseEntity {
 
     public int getIntervalTime() {
         return intervalTime;
+    }
+
+    public int getExtraFare() {
+        return extraFare;
     }
 
     public LineStations getLineStations() {

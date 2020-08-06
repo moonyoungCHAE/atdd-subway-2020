@@ -1,6 +1,9 @@
 package wooteco.subway.maps.map.application;
 
+import wooteco.subway.maps.line.domain.Line;
 import wooteco.subway.maps.map.domain.FareDistanceStrategy;
+
+import java.util.List;
 
 public class FareService {
     private static final int DEFAULT_FARE = 1250;
@@ -19,5 +22,11 @@ public class FareService {
         fare += fareDistanceStrategy_5km.findAdditionalFare(distance);
         fare += fareDistanceStrategy_8km.findAdditionalFare(distance);
         return fare;
+    }
+
+    public int findFare(List<Line> lines) {
+        return lines.stream()
+                .map(Line::getExtraFare)
+                .max(Integer::compareTo).get();
     }
 }
