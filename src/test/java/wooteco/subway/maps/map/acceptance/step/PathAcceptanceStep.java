@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
+import wooteco.security.core.TokenResponse;
 import wooteco.subway.maps.map.dto.PathResponse;
 import wooteco.subway.maps.station.dto.StationResponse;
 
@@ -14,6 +15,17 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PathAcceptanceStep {
+    public static ExtractableResponse<Response> 로그인한_사용자의_거리_경로_조회_요청(String type, long source, long target, TokenResponse tokenResponse) {
+        return RestAssured.given().log().all().
+                auth().oauth2(tokenResponse.getAccessToken()).
+                accept(MediaType.APPLICATION_JSON_VALUE).
+                when().
+                get("/paths?source={sourceId}&target={targetId}&type={type}", source, target, type).
+                then().
+                log().all().
+                extract();
+    }
+
     public static ExtractableResponse<Response> 거리_경로_조회_요청(String type, long source, long target) {
         return RestAssured.given().log().all().
                 accept(MediaType.APPLICATION_JSON_VALUE).
@@ -39,9 +51,9 @@ public class PathAcceptanceStep {
         assertThat(pathResponse.getDuration()).isEqualTo(totalDuration);
     }
 
-    public static void 요금_정보를_함께_응답함(ExtractableResponse<Response> response) {
-        int fare = response.as(PathResponse.class)
+    public static void 적절한_요금을_응답함(ExtractableResponse<Response> response, int expected) {
+        int actual = response.as(PathResponse.class)
                 .getFare();
-        assertThat(fare).isGreaterThanOrEqualTo(1250);
+        assertThat(actual).isEqualTo(expected);
     }
 }
